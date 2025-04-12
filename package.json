@@ -1,13 +1,15 @@
 {
-  "name": " ",
-  "version": "0.0.1",
-  "description": "",
-  "private": true,
-  "keywords": [
-    ""
-  ],
-  "license": "",
-  "author": "",
+  "name": "dynamic-stream-overlay",
+  "version": "1.0.0",
+  "description": "A customizable draggable and resizable window manager for stream overlays or dashboards.",
+  "keywords": ["overlay", "draggable", "customizable", "dashboard"],
+  "license": "MIT",
+  "author": "KaydeeFisher (Kaydee.Codes)",
+  "homepage": "https://github.com/KaydeeCodes/DynamicStreamOverlay",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KaydeeCodes/DynamicStreamOverlay"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --open --config webpack.config.dev.js",
