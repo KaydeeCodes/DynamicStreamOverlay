@@ -48,20 +48,25 @@ function createNewWindow({ id = `window-${windowCount++}`, position = {}, size =
 
   // Populate window content
   box.innerHTML = `
-    <div class="top-bar">
-      <span class="title-text">${title}</span>
-      <div class="icon-container">
-        <span class="icon" data-action="close">X</span>
-        <span class="icon" data-action="minimize">-</span>
-        <span class="icon" data-action="reset">#</span>
-      </div>
+  <div class="top-bar">
+    <span class="title-text">${title}</span>
+    <div class="icon-container">
+      <span class="icon" data-action="close">X</span>
+      <span class="icon" data-action="minimize">-</span>
+      <span class="icon" data-action="reset">#</span>
     </div>
-    <div class="content">
-      <p></p>
-    </div>
-    <span class="cog-icon"></span>
-    <input type="text" class="hex-color-input" placeholder="HEX Code #FF.." />
-  `;
+  </div>
+  <div class="content">
+    <p></p>
+  </div>
+  <!-- Moved expand icon outside of the title bar -->
+  <span class="expand-icon" data-action="expand">&gt;</span> 
+  <span class="cog-icon"></span>
+  <input type="text" class="hex-color-input" placeholder="HEX Code #FF.." />
+  <div class="expanded-content hidden"></div>
+`;
+
+
 
   // Append the box to the container
   container.appendChild(box);
@@ -158,6 +163,26 @@ function attachWindowControls(box) {
   const colorInput = box.querySelector('.hex-color-input');
   const content = box.querySelector('.content');
   const titleText = box.querySelector('.title-text');
+  const expandIcon = box.querySelector('.expand-icon');
+  const expandedContent = box.querySelector('.expanded-content');
+
+  // Attach event listener for the expand icon
+  expandIcon.addEventListener('click', () => {
+    if (expandedContent.classList.contains('hidden')) {
+      // Show the expanded content
+      expandedContent.classList.remove('hidden');
+      expandedContent.style.display = 'block';
+
+      // Optional: Add animations or position adjustments
+      expandedContent.innerHTML = `<p>Expanded content here!</p>`; // Add placeholder content
+    } else {
+      // Hide the expanded content
+      expandedContent.classList.add('hidden');
+      expandedContent.style.display = 'none';
+    }
+  });
+
+
 
   // Handle title editing
   titleText.addEventListener('dblclick', () => {
