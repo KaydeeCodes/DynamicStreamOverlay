@@ -1,0 +1,203 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Apply Consolas Bold globally */
+body {
+  font-family: 'Consolas', monospace;
+  font-weight: bold; /* Ensure bold weight */
+}
+
+
+/* Container for the dynamic windows */
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #ffebf0; /* Light pink background */
+
+}
+
+/* Draggable box */
+.draggable-box {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 300px;
+  height: 200px;
+  background-color: #ffe6f5; /* Light pastel pink */
+  border: 2px solid #ffcce5;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadows */
+  resize: both;
+  overflow: auto;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.draggable-box:hover {
+  /*transform: scale(1.02); /* Slight zoom on hover */
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
+}
+
+/* Title bar */
+.top-bar {
+  background-color: #ffe0f0;
+  height: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  cursor: grab;
+  user-select: none;
+  border-bottom: 1px solid #ffcce5; /* Subtle border */
+}
+
+.title-text {
+  flex-grow: 1;
+  color: #e06ba4;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+/* Add a flower emoji to the title text */
+.title-text::before {
+  content: '🌸 '; /* Cute flower before the title */
+}
+
+/* Icon area in the title bar */
+.icon-container {
+  display: flex;
+  gap: 8px;
+}
+
+.icon {
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.icon:hover {
+  background-color: #ffcce5;
+  transform: scale(1.05);
+}
+
+/* Replace the cog icon with a flower gear 🌼 */
+.cog-icon {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 20px;
+  background-color: #ffe6f5;
+  border-radius: 50%;
+  opacity: 0; /* Hidden by default */
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border: 2px solid #ffcce5;
+}
+
+.cog-icon::before {
+  content: '🌼'; /* Flower gear icon */
+}
+
+.cog-icon:hover {
+  background-color: #ffcce5;
+  transform: scale(1.05); /* Enlarge slightly */
+}
+
+.draggable-box:hover .cog-icon {
+  opacity: 1; /* Show only when hovering */
+  pointer-events: auto;
+}
+
+/* Input box for hex colors */
+.hex-color-input {
+  position: absolute;
+  bottom: 50px;
+  left: 10px;
+  display: none;
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  padding: 5px;
+  border: 2px solid #ffcce5;
+  border-radius: 10px;
+  outline: none;
+  width: 120px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Focus effects for the color input */
+.hex-color-input:focus {
+  border-color: #e06ba4;
+  box-shadow: 0 4px 8px rgba(224, 107, 164, 0.3);
+}
+
+/* Add window button fancy style */
+/* Plus button */
+#add-window-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  font-family: 'Consolas', monospace;
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  /* Hidden by default */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease; /* Smooth fade-in/out */
+}
+
+#add-window-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#add-window-btn:hover {
+  transform: scale(1.05); /* Pop effect */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+
+
+
+
+
+
+
+
+.resize-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 6px;
+  opacity: 0; /* Start hidden */
+  pointer-events: none; /* Prevent interaction */
+  transition: opacity 0.3s ease; /* Smooth fade-in/out */
+}
+
