@@ -232,13 +232,13 @@ function attachWindowControls(box) {
   colorInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       const colorCode = colorInput.value.trim();
-      //if (/^[0-9A-F]{6}$/i.test(colorCode)) { // Validate hex color input
+      if (/^[0-9A-F]{6}$/i.test(colorCode)) { // Validate hex color input
         box.style.backgroundColor =  colorCode;
         saveWindowsToLocalStorage();
-      //} else {
-       // alert('Please enter a valid hex color code (e.g., #FF5733).');
-      //}
-      //colorInput.style.display = 'none'; // Hide input after use
+      } else {
+        alert('Please enter a valid hex color code (e.g., #FF5733).');
+      }
+      colorInput.style.display = 'none'; // Hide input after use
     }
   });
 
