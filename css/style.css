@@ -20,6 +20,12 @@ body {
   background-color: #ffebf0; /* Light pink background */
 }
 
+.content {
+text-align: center;
+  padding-top: 20px;
+
+}
+
 /* ========== Draggable Box Styles ========== */
 .draggable-box {
   position: absolute;
@@ -216,10 +222,6 @@ body {
 
 
 
-
-
-
-
 /* Expand icon (default hidden) */
 .expand-icon {
   position: absolute;
@@ -250,3 +252,47 @@ body {
   background-color: #ffcce5; /* Slight color change */
   transform: translateY(-50%) scale(1.2); /* Highlight effect with scaling */
 }
+
+/* Styling for the expanded configuration */
+.expanded-content {
+  background-color: #ffe6f5; /* Same pastel pink as draggable window */
+  border: 2px solid #ffcce5;
+  border-radius: 10px;
+  padding: 10px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+.expanded-content label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+  color: #333;
+}
+
+.expanded-content input[type="checkbox"] {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.expanded-content .title-bar-color {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid #ffcce5;
+  border-radius: 5px;
+  outline: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'Consolas', monospace;
+  font-size: 14px;
+}
+
+.expanded-content input.title-bar-color:focus {
+  border-color: #e06ba4;
+  box-shadow: 0 4px 10px rgba(224, 107, 164, 0.2);
+}
+

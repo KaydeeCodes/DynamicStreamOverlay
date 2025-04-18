@@ -19,11 +19,18 @@ function saveWindowsToLocalStorage() {
       },
       title: box.querySelector('.title-text').textContent || 'Untitled',
       backgroundColor: box.style.backgroundColor || '#ffffff',
+      titleBarColor: box.querySelector('.top-bar').style.backgroundColor || '#ffe0f0', // Save the title bar color
+      iconVisibility: {
+        close: box.querySelector('.icon[data-action="close"]').style.display !== 'none',
+        minimize: box.querySelector('.icon[data-action="minimize"]').style.display !== 'none',
+        reset: box.querySelector('.icon[data-action="reset"]').style.display !== 'none',
+      },
     };
   });
 
   localStorage.setItem('windows', JSON.stringify(allWindows));
 }
+
 
 // Restore all windows from localStorage
 function restoreWindowsFromLocalStorage() {
@@ -34,7 +41,7 @@ function restoreWindowsFromLocalStorage() {
 /** ---- Window Creation ---- **/
 
 // Create a new draggable and resizable window
-function createNewWindow({ id = `window-${windowCount++}`, position = {}, size = {}, title = 'Untitled', backgroundColor = '#ffffff' }) {
+function createNewWindow({ id = `window-${windowCount++}`, position = {}, size = {}, title = 'Untitled', backgroundColor = '#ffffff', titleBarColor = '#ffe0f0', iconVisibility = { close: true, minimize: true, reset: true } }) {
   const box = document.createElement('div');
   box.classList.add('draggable-box');
   box.dataset.id = id; // Assign a unique identifier
@@ -48,25 +55,22 @@ function createNewWindow({ id = `window-${windowCount++}`, position = {}, size =
 
   // Populate window content
   box.innerHTML = `
-  <div class="top-bar">
+  <div class="top-bar" style="background-color: ${titleBarColor};">
     <span class="title-text">${title}</span>
     <div class="icon-container">
-      <span class="icon" data-action="close">X</span>
-      <span class="icon" data-action="minimize">-</span>
-      <span class="icon" data-action="reset">#</span>
+      <span class="icon" data-action="close" style="display: ${iconVisibility.close ? 'inline-block' : 'none'};">X</span>
+      <span class="icon" data-action="minimize" style="display: ${iconVisibility.minimize ? 'inline-block' : 'none'};">-</span>
+      <span class="icon" data-action="reset" style="display: ${iconVisibility.reset ? 'inline-block' : 'none'};">#</span>
     </div>
   </div>
   <div class="content">
     <p></p>
   </div>
-  <!-- Moved expand icon outside of the title bar -->
   <span class="expand-icon" data-action="expand">&gt;</span> 
   <span class="cog-icon"></span>
   <input type="text" class="hex-color-input" placeholder="HEX Code #FF.." />
   <div class="expanded-content hidden"></div>
 `;
-
-
 
   // Append the box to the container
   container.appendChild(box);
@@ -77,6 +81,66 @@ function createNewWindow({ id = `window-${windowCount++}`, position = {}, size =
 
   // Add functionality for title editing, cog icon, and icon actions
   attachWindowControls(box);
+
+  // Expanded content and its listeners (attach "Expand" options functionality)
+  const expandIcon = box.querySelector('.expand-icon');
+  const expandedContent = box.querySelector('.expanded-content');
+
+  expandIcon.addEventListener('click', () => {
+    if (expandedContent.classList.contains('hidden')) {
+      expandedContent.classList.remove('hidden');
+      expandedContent.style.display = 'block';
+
+      // Add configuration UI
+      expandedContent.innerHTML = `
+        <div class="expanded-content hidden"></div>
+           <label>
+             <input type="checkbox" class="icon-toggle" data-icon="close" ${iconVisibility.close ? 'checked' : ''} /> Show Close Icon
+           </label>
+
+          <label>
+            <input type="checkbox" class="icon-toggle" data-icon="minimize" ${iconVisibility.minimize ? 'checked' : ''} /> Show Minimize Icon
+          </label>
+          <label>
+            <input type="checkbox" class="icon-toggle" data-icon="reset" ${iconVisibility.reset ? 'checked' : ''} /> Show Reset Icon
+          </label>
+          <label>
+            <input type="text" class="title-bar-color" placeholder="Enter HEX Color (e.g., #FF5733)" value="${titleBarColor}" />
+          </label>
+        </div>
+      `;
+
+      // Add functionality for the checkboxes to toggle icons
+      expandedContent.querySelectorAll('.icon-toggle').forEach((checkbox) => {
+        checkbox.addEventListener('change', (event) => {
+          const action = event.target.dataset.icon;
+          const icon = box.querySelector(`.icon[data-action="${action}"]`);
+          if (checkbox.checked) {
+            icon.style.display = 'inline-block'; // Show the icon
+          } else {
+            icon.style.display = 'none'; // Hide the icon
+          }
+          saveWindowsToLocalStorage(); // Save the new state to localStorage
+        });
+      });
+
+      // Add functionality for the hex color input
+      const colorInput = expandedContent.querySelector('.title-bar-color');
+      colorInput.addEventListener('input', (event) => {
+        const color = event.target.value;
+        if (/^#[0-9A-F]{6}$/i.test(color)) {
+          box.querySelector('.top-bar').style.backgroundColor = color; // Change the title bar color
+          saveWindowsToLocalStorage(); // Save the new state to localStorage
+        }
+      });
+    } else {
+      //expandedContent.classList.add('hidden');
+      expandedContent.style.display = 'none';
+    }
+  });
+
+
+
 
   // Save the updated windows list
   saveWindowsToLocalStorage();
@@ -173,14 +237,52 @@ function attachWindowControls(box) {
       expandedContent.classList.remove('hidden');
       expandedContent.style.display = 'block';
 
-      // Optional: Add animations or position adjustments
-      expandedContent.innerHTML = `<p>Expanded content here!</p>`; // Add placeholder content
+      // Add configuration UI
+      expandedContent.innerHTML = `
+      <div class="config-options">
+        <label>
+          <input type="checkbox" class="icon-toggle" data-icon="close" checked /> Show Close Icon
+        </label>
+        <label>
+          <input type="checkbox" class="icon-toggle" data-icon="minimize" checked /> Show Minimize Icon
+        </label>
+        <label>
+          <input type="checkbox" class="icon-toggle" data-icon="reset" checked /> Show Reset Icon
+        </label>
+        <label>
+          <input type="text" class="title-bar-color" placeholder="Enter HEX Color (e.g., #FF5733)" />
+        </label>
+      </div>
+    `;
+
+      // Add functionality for the checkboxes to toggle icons
+      expandedContent.querySelectorAll('.icon-toggle').forEach((checkbox) => {
+        checkbox.addEventListener('change', (event) => {
+          const action = event.target.dataset.icon;
+          const icon = box.querySelector(`.icon[data-action="${action}"]`);
+          if (checkbox.checked) {
+            icon.style.display = 'inline-block'; // Show the icon
+          } else {
+            icon.style.display = 'none'; // Hide the icon
+          }
+        });
+      });
+
+      // Add functionality for the hex color input
+      const colorInput = expandedContent.querySelector('.title-bar-color');
+      colorInput.addEventListener('input', (event) => {
+        const color = event.target.value;
+        if (/^#[0-9A-F]{6}$/i.test(color)) {
+          box.querySelector('.top-bar').style.backgroundColor = color; // Change the title bar color
+        }
+      });
     } else {
       // Hide the expanded content
       expandedContent.classList.add('hidden');
       expandedContent.style.display = 'none';
     }
   });
+
 
 
 
@@ -232,12 +334,12 @@ function attachWindowControls(box) {
   colorInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       const colorCode = colorInput.value.trim();
-      if (/^[0-9A-F]{6}$/i.test(colorCode)) { // Validate hex color input
+      //if (/^[0-9A-F]{6}$/i.test(colorCode)) { // Validate hex color input
         box.style.backgroundColor =  colorCode;
         saveWindowsToLocalStorage();
-      } else {
-        alert('Please enter a valid hex color code (e.g., #FF5733).');
-      }
+      //} else {
+     //   alert('Please enter a valid hex color code (e.g., #FF5733).');
+     // }
       colorInput.style.display = 'none'; // Hide input after use
     }
   });
