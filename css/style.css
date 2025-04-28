@@ -20,11 +20,8 @@ body {
   background-color: #ffebf0; /* Light pink background */
 }
 
-.content {
-text-align: center;
-  padding-top: 20px;
 
-}
+
 
 /* ========== Draggable Box Styles ========== */
 .draggable-box {
@@ -295,4 +292,42 @@ text-align: center;
   border-color: #e06ba4;
   box-shadow: 0 4px 10px rgba(224, 107, 164, 0.2);
 }
+
+
+
+
+
+
+
+
+.content {
+ text-align: center;
+  color: #e06ba4;
+
+}
+.content p{
+  padding: 10px;
+  font-size: 23px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

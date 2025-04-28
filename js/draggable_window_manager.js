@@ -18,7 +18,7 @@ function saveWindowsToLocalStorage() {
         height: box.style.height || '200px',
       },
       title: box.querySelector('.title-text').textContent || 'Untitled',
-      backgroundColor: box.style.backgroundColor || '#ffffff',
+      backgroundColor: box.style.backgroundColor || '#ffe6f5',
       titleBarColor: box.querySelector('.top-bar').style.backgroundColor || '#ffe0f0', // Save the title bar color
       iconVisibility: {
         close: box.querySelector('.icon[data-action="close"]').style.display !== 'none',
@@ -41,7 +41,7 @@ function restoreWindowsFromLocalStorage() {
 /** ---- Window Creation ---- **/
 
 // Create a new draggable and resizable window
-function createNewWindow({ id = `window-${windowCount++}`, position = {}, size = {}, title = 'Untitled', backgroundColor = '#ffffff', titleBarColor = '#ffe0f0', iconVisibility = { close: true, minimize: true, reset: true } }) {
+function createNewWindow({ id = `window-${windowCount++}`, position = {}, size = {}, title = 'Untitled', backgroundColor = '#ffe6f5', titleBarColor = '#ffe0f0', iconVisibility = { close: true, minimize: true, reset: true } }) {
   const box = document.createElement('div');
   box.classList.add('draggable-box');
   box.dataset.id = id; // Assign a unique identifier
@@ -63,7 +63,7 @@ function createNewWindow({ id = `window-${windowCount++}`, position = {}, size =
       <span class="icon" data-action="reset" style="display: ${iconVisibility.reset ? 'inline-block' : 'none'};">#</span>
     </div>
   </div>
-  <div class="content">
+  <div class="content" >
     <p></p>
   </div>
   <span class="expand-icon" data-action="expand">&gt;</span> 
@@ -377,11 +377,31 @@ addWindowBtn.addEventListener('click', () => createNewWindow({}));
 // Restore windows on page load
 document.addEventListener('DOMContentLoaded', restoreWindowsFromLocalStorage);
 
+// Function to read and update content from the text file
+function updateWindowContentFromFile() {
+  const windows = document.querySelectorAll('.draggable-box');
+  
+  windows.forEach(window => {
+    const titleElement = window.querySelector('.title-text');
+    if (titleElement && titleElement.textContent === 'Song - Now Playing') {
+      fetch('NowPlaying.txt')
+        .then(response => response.text())
+        .then(content => {
+          const contentElement = window.querySelector('.content p');
+          if (contentElement) {
+            contentElement.textContent = content;
+          }
+        })
+        .catch(error => console.error('Error reading file:', error));
+    }
+  });
+}
 
-
-
-
-
-
-
-
+// Start the periodic update when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  // Initial check
+  updateWindowContentFromFile();
+  
+  // Set up periodic checking every 5 seconds
+  setInterval(updateWindowContentFromFile, 5000);
+});
