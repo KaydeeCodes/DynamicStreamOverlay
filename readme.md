@@ -1,3 +1,7 @@
+# Project now abandoned
+I hope to pick the project up in the future when i ahev more time. until then, this could be useful to others.
+
+
 # Dynamic Stream Overlay
 Dynamic Stream Overlay is a fully customizable and user-friendly system designed for managing dynamic draggable and resizable windows in a web-based environment. With added functionality for personalization and settings per window, this project is perfect for live streaming overlays, admin dashboards, or interactive frontend applications.
 ## Features
